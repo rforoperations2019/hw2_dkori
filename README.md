@@ -1,4 +1,4 @@
-# Homework2
+# Homework 2
 
 Nearly every Shiny application requires you to translate user inputs to allow them to manipulate the data you visualize for them. For this assignment you must use data from an open data website (you may download and clean the data and write it as a CSV). You must also use a different UI layout than what you used in Homework 1.
 
