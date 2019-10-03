@@ -67,7 +67,7 @@ alle_income_map<-alle_income%>%
 #create map with all 3 layers, layer selector, basemap selector
 leaflet()%>%
   addProviderTiles(provider = "CartoDB.Positron", group = "Positron")%>%
-  addProviderTiles(providers$Thunderforest, group = "ThunderForest")%>%
+  addProviderTiles(provider = "OpenStreetMap.Mapnik", group = "OSM")%>%
   #add cell tower points to map
   addAwesomeMarkers(data=cell_towers,icon=icons["Towers"],
                     #set group name
@@ -84,13 +84,16 @@ leaflet()%>%
               group="Median Income")%>%
   #add legend
   addLegend(data=alle_income_map,"bottomright",
-             #set palette
-             pal=pal,
-             #indicate values
-             values=~estimate)%>%
+            #set palette
+            pal=pal,
+            #indicate values
+            values=~estimate,
+            title="Median HH Income")%>%
+  #add snow routes
+  addPolylines(data=snow_routes,group="snow routes")%>%
   addLayersControl(
-    baseGroups = c("Positron","ThunderForest"),
-    overlayGroups = c("Cell Towers", "Median Income"),
+    baseGroups = c("Positron","OSM"),
+    overlayGroups = c("Cell Towers", "Median Income","Snow Routes"),
     options = layersControlOptions(collapsed = FALSE))
   
 
