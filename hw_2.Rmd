@@ -42,7 +42,7 @@ alle_income<-get_acs(variables=c(Median_hh_income="B06011_001"),
                      county="Allegheny",
                      geography="tract",
                      year=2017,
-                     geometry=TRUE)%>%
+                     geometry=TRUE)
   
 
 #list.files()
