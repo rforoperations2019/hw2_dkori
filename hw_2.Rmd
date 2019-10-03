@@ -51,4 +51,21 @@ snow_routes<-readOGR('Allegheny_County_Snow_Route_Centerlines_20162017.geojson')
 
 ```
 
+```{r create_map}
+#create icons object
+icons <- awesomeIconList(
+  Towers = makeAwesomeIcon(icon = "fa-signal", library = "fa", markerColor = "blue")
+  )
+
+#create map with all 3 layers, layer selector, basemap selector
+leaflet()%>%
+  addProviderTiles(provider = "CartoDB.Positron", group = "Positron")%>%
+  addProviderTiles(providers$Thunderforest, group = "ThunderForest")%>%
+  addAwesomeMarkers(data=cell_towers,icon=icons["Towers"])%>%
+  addLayersControl(
+    baseGroups = c("Positron","ThunderForest"),
+    #overlayGroups = c("Quakes", "Outline"),
+    options = layersControlOptions(collapsed = FALSE))
+  
+
 ```
