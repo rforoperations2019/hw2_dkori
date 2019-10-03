@@ -95,6 +95,5 @@ leaflet()%>%
     baseGroups = c("Positron","OSM"),
     overlayGroups = c("Cell Towers", "Median Income","Snow Routes"),
     options = layersControlOptions(collapsed = FALSE))
-  
 
 ```
