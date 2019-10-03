@@ -42,7 +42,9 @@ alle_income<-get_acs(variables=c(Median_hh_income="B06011_001"),
                      county="Allegheny",
                      geography="tract",
                      year=2017,
-                     geometry=TRUE)
+                     geometry=TRUE)%>%
+  
+
 #list.files()
 #read in cell tower points
 cell_towers<-readOGR('Allegheny_County_Cell_Tower_Points.geojson')
@@ -52,19 +54,43 @@ snow_routes<-readOGR('Allegheny_County_Snow_Route_Centerlines_20162017.geojson')
 ```
 
 ```{r create_map}
-#create icons object
+#create icons object for points
 icons <- awesomeIconList(
   Towers = makeAwesomeIcon(icon = "fa-signal", library = "fa", markerColor = "blue")
   )
+#create palette for polygons
+pal <- colorNumeric(palette = "RdYlGn", domain = alle_income$estimate, n = nrow(alle_income))
 
+#transform alle_income projection
+alle_income_map<-alle_income%>%
+  st_transform(crs = "+init=epsg:4326")
 #create map with all 3 layers, layer selector, basemap selector
 leaflet()%>%
   addProviderTiles(provider = "CartoDB.Positron", group = "Positron")%>%
   addProviderTiles(providers$Thunderforest, group = "ThunderForest")%>%
-  addAwesomeMarkers(data=cell_towers,icon=icons["Towers"])%>%
+  #add cell tower points to map
+  addAwesomeMarkers(data=cell_towers,icon=icons["Towers"],
+                    #set group name
+                    group="Cell Towers")%>%
+  #add median income polygons
+  addPolygons(data=alle_income_map,
+              #remove borderlines
+              stroke=FALSE,
+              #set color palette
+              color=~pal(estimate),
+              #set opacity
+              fillOpacity=.5,
+              #set group name
+              group="Median Income")%>%
+  #add legend
+  addLegend(data=alle_income_map,"bottomright",
+             #set palette
+             pal=pal,
+             #indicate values
+             values=~estimate)%>%
   addLayersControl(
     baseGroups = c("Positron","ThunderForest"),
-    #overlayGroups = c("Quakes", "Outline"),
+    overlayGroups = c("Cell Towers", "Median Income"),
     options = layersControlOptions(collapsed = FALSE))
   
 
